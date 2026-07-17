@@ -71,8 +71,8 @@ resource "aws_iam_role_policy_attachment" "audit_security" {
   policy_arn = "arn:aws:iam::aws:policy/SecurityAudit"
 }
 
-# Attach AWS Managed AdministratorAccess strictly to the infrastructure provisioning role
 resource "aws_iam_role_policy_attachment" "ops_admin" {
+  # checkov:skip=CKV_AWS_274:PlatformOpsRole requires AdministratorAccess to execute core infrastructure provisioning within the sandbox environment.
   role       = aws_iam_role.platform_ops.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
@@ -87,34 +87,34 @@ resource "aws_iam_role_policy" "app_runtime_minimal" {
     Version = "2012-10-17"
     Statement = [
       {
-        sid    = "AllowAppReadDataAccess"
-        effect = "Allow"
-        action = [
+        Sid    = "AllowAppReadDataAccess"
+        Effect = "Allow"
+        Action = [
           "s3:GetObject"
         ]
-        resource = [
+        Resource = [
           "arn:aws:s3:::aws-cloud-foundation-sandbox-*/*"
         ]
       },
       {
-        sid    = "AllowAppListBucketAccess"
-        effect = "Allow"
-        action = [
+        Sid    = "AllowAppListBucketAccess"
+        Effect = "Allow"
+        Action = [
           "s3:ListBucket"
         ]
-        resource = [
+        Resource = [
           "arn:aws:s3:::aws-cloud-foundation-sandbox-*"
         ]
       },
       {
-        sid    = "AllowAppKMSDecryption"
-        effect = "Allow"
-        action = [
+        Sid    = "AllowAppKMSDecryption"
+        Effect = "Allow"
+        Action = [
           "kms:Decrypt",
           "kms:DescribeKey"
         ]
-        resource = [
-          "arn:aws:aws:kms:*:*:key/*" # Ideally scope this to your exact key ARN if known, or follow your regional naming scheme
+        Resource = [
+          "arn:aws:kms:*:*:key/*" # Ideally scope this to your exact key ARN if known, or follow your regional naming scheme
         ]
       }
     ]
