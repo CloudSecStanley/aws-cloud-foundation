@@ -1,0 +1,33 @@
+# --- Terraform Runtime Directories ---
+.terraform/
+.terraform.lock.hcl
+
+# --- Terraform State Files ---
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# --- Crash Logs ---
+crash.log
+crash.*.log
+
+# --- Sensitive Variable Files ---
+# Never commit these; they are reserved for credentials or environment-specific values
+*.tfvars
+*.tfvars.json
+
+# --- Override Files ---
+*.tfoverride
+*.tfoverride.json
+*_override.tf
+*_override.tf.json
+
+# --- CLI Configuration ---
+.terraformrc
+terraform.rc
+
+# --- Linux System & IDE Files ---
+.DS_Store
+.vscode/
+.history/
+*.log
