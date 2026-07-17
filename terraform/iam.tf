@@ -78,27 +78,45 @@ resource "aws_iam_role_policy_attachment" "ops_admin" {
 }
 
 # Custom Inline Policy for AppRuntimeRole: Enforces zero access to IAM/KMS keys, allows read-only application assets
+
 resource "aws_iam_role_policy" "app_runtime_minimal" {
   name = "AppRuntimeMinimalStorageAccess"
   role = aws_iam_role.runtime_exec.id
 
   policy = jsonencode({
     Version = "2012-10-17"
-    statement = [
+    Statement = [
       {
         sid    = "AllowAppReadDataAccess"
         effect = "Allow"
         action = [
-          "s3:GetObject",
+          "s3:GetObject"
+        ]
+        resource = [
+          "arn:aws:s3:::aws-cloud-foundation-sandbox-*/*"
+        ]
+      },
+      {
+        sid    = "AllowAppListBucketAccess"
+        effect = "Allow"
+        action = [
           "s3:ListBucket"
         ]
         resource = [
-          "arn:aws:s3:::*"
+          "arn:aws:s3:::aws-cloud-foundation-sandbox-*"
         ]
-        encryption = [
-          "arn:aws:kms:*:*:key/*"
+      },
+      {
+        sid    = "AllowAppKMSDecryption"
+        effect = "Allow"
+        action = [
+          "kms:Decrypt",
+          "kms:DescribeKey"
+        ]
+        resource = [
+          "arn:aws:aws:kms:*:*:key/*" # Ideally scope this to your exact key ARN if known, or follow your regional naming scheme
         ]
       }
     ]
   })
-}
+} 
