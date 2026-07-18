@@ -42,7 +42,29 @@ resource "aws_kms_key" "app_key" {
                     "kms:DescribeKey"
                     ]
                     Resource = "*"
+                },
+
+            # Allow the CloudWatch Logs service to use the key for encrypting log data
+            {
+                Sid    = "AllowCloudWatchLogstousethekey"
+                Effect = "Allow"
+                Principal = {
+                    Service = "logs.${var.aws_region}.amazonaws.com"
                 }
+                Action   = [
+                    "kms:Encrypt",
+                    "kms:Decrypt",
+                    "kms:ReEncrypt*",
+                    "kms:GenerateDataKey*",
+                    "kms:DescribeKey"
+                ]
+                Resource = "*"
+                Condition = {
+                    ArnEquals = {
+                        "kms:EncryptionContext:aws:logs:arn" = "arn:aws:logs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:*"
+                    }
+                }
+            }
             ]
         })  
 }

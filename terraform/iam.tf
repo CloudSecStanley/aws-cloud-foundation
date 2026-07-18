@@ -120,3 +120,47 @@ resource "aws_iam_role_policy" "app_runtime_minimal" {
     ]
   })
 } 
+
+# Trust policy allowing the VPC Flow Logs service to assume this role
+
+data "aws_iam_policy_document" "vpc_flow_logs_trust_policy" {
+  statement {
+    sid      = "AllowAssumeRoleFromVPCFlowLogs"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+    principals {
+      type        = "Service"
+      identifiers = ["vpc-flow-logs.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "vpc_flow_logs_role" {
+  name               = "sandbox-vpc-flow-logs-role"
+  assume_role_policy = data.aws_iam_policy_document.vpc_flow_logs_trust_policy.json
+}
+
+# IAM policy specifying minimal write permissions to the CloudWatch log group
+
+resource "aws_iam_role_policy" "vpc_flow_logs_policy" {
+  name   = "sandbox-vpc-flow-logs-policy"
+  role   = aws_iam_role.vpc_flow_logs_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowVPCFlowLogsToWriteToCloudWatch"
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams",
+          "logs:DescribeLogGroups"
+        ]
+        Resource = "${aws_cloudwatch_log_group.vpc_flow_logs.arn}:*"
+      }
+    ]
+  })
+}
