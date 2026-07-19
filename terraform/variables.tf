@@ -1,3 +1,5 @@
+# General variables for the Terraform configuration
+
 variable "aws_region" {
     description = "The AWS region to deploy resources in"
     type        = string
@@ -16,6 +18,8 @@ variable "project_name" {
     default     = "aws-cloud-foundation"
 }
 
+# VPC and Subnet variables
+
 variable "vpc_cidr" {
     description = "The CIDR block for the VPC"
     type        = string
@@ -28,4 +32,28 @@ variable "private_subnet_cidr" {
     default     = "10.0.1.0/24"
 }
 
+# Instance variables 
 
+variable "instance_type" {
+    description = "The EC2 instance type for the compute resources"
+    type        = string
+    default     = "t3.micro"
+}
+
+variable "ami_name_filter" {
+    description = "The name filter for the AMI to use for EC2 instances"
+    type        = string
+    default     = "al2023-ami-2023.*-x86_64"
+}
+
+variable "root_volume_size" {
+    description = "The size of the root volume for EC2 instances (in GB)"
+    type        = number
+    default     = 10
+}
+
+variable "root_volume_type" {
+    description = "The type of the root volume for EC2 instances"
+    type        = string
+    default     = "gp3"
+}
