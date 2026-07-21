@@ -17,7 +17,15 @@ resource "aws_security_group" "app_sg" {
   description = "Security group for sandbox compute instance"
   vpc_id      = aws_vpc.sandbox_vpc.id
 
-  # Inbound traffic blocked completely by default
+  # Inbound traffic blocked completely by default\
+
+  ingress {
+    description = "Only allow inbound traffic from the ALB"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
+  }
 
   # Egress: restrict traffic to only your CIDR block
 

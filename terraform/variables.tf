@@ -32,6 +32,18 @@ variable "private_subnet_cidr" {
     default     = "10.0.1.0/24"
 }
 
+variable "public_cidr_1" {
+    description = "The CIDR block for the public subnet 1"
+    type = string
+    default = "10.0.2.0/24"
+}
+
+variable "public_cidr_2" {
+    description = "The CIDR block for the public subnet 2"
+    type = string
+    default = "10.0.3.0/24"
+}
+
 # Instance variables 
 
 variable "instance_type" {
@@ -56,4 +68,18 @@ variable "root_volume_type" {
     description = "The type of the root volume for EC2 instances"
     type        = string
     default     = "gp3"
+}
+
+# DOMAIN & CERTIFICATE VARIABLES
+
+variable "domain_name" {
+  type        = string
+  description = "The primary domain name for the ALB certificate"
+  default     = "app.sandbox.internal"
+}
+
+variable "alb_certificate_arn" {
+  type        = string
+  description = "Optional override for an existing ACM Certificate ARN"
+  default     = null
 }

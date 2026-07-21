@@ -22,6 +22,28 @@ resource "aws_subnet" "private_compute_subnet" {
   }
 }
 
+# Public Subnet for compute resources
+
+resource "aws_subnet" "public_1" {
+  vpc_id = aws_vpc.sandbox_vpc.id
+  cidr_block = var.public_cidr_1
+  availability_zone = "${var.aws_region}a"
+
+  tags = {
+    Name = "sandbox-public-subnet-1"
+  }
+}
+
+resource "aws_subnet" "public_2" {
+  vpc_id =  aws_vpc.sandbox_vpc.id
+  cidr_block = var.public_cidr_2
+  availability_zone = "${var.aws_region}b"
+
+  tags = {
+    Name = "sandbox-public-subnet-2"
+  }
+}
+
 # Isolated Route Table for the private subnet
 
 resource "aws_route_table" "private_rt" {
