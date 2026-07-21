@@ -44,6 +44,26 @@ resource "aws_subnet" "public_2" {
   }
 }
 
+resource "aws_subnet" "private_db_1" {
+  vpc_id =  aws_vpc.sandbox_vpc.id
+  cidr_block = var.private_dbsubnet_cidr_1
+  availability_zone = "${var.aws_region}b"
+
+  tags = {
+    Name = "sandbox-private-dbsubnet-1"
+  }
+}
+
+resource "aws_subnet" "private_db_2" {
+  vpc_id =  aws_vpc.sandbox_vpc.id
+  cidr_block = var.private_dbsubnet_cidr_2
+  availability_zone = "${var.aws_region}b"
+
+  tags = {
+    Name = "sandbox-private-dbsubnet-2"
+  }
+}
+
 # Isolated Route Table for the private subnet
 
 resource "aws_route_table" "private_rt" {
